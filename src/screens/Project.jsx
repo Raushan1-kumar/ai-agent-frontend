@@ -8,16 +8,7 @@ function Project() {
     const location = useLocation();
     const [messages, setMessages] = useState([]);
     const projectId = location.state?.project._id;
- const [fileTree, setFileTree] = useState({
-                "app.js":{
-                        content:"const express = require('express')",
-                },
-                "package.json":{
-                        content:`{
-                                "name":"temp-server",
-                        }`
-                }
-        })
+ const [fileTree, setFileTree] = useState({})
 
 
     useEffect(() => {

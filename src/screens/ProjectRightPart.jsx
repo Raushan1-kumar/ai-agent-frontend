@@ -7,12 +7,6 @@ function ProjectRightPart(props) {
     const [currentOpenFile, setCurrentOpenFile] = useState("");
     const [editorContent, setEditorContent] = useState("");
 
-    // Load file content when switching files
-    useEffect(() => {
-        if (currentOpenFile && props.fileTree[currentOpenFile]) {
-            setEditorContent(props.fileTree[currentOpenFile].content || "");
-        }
-    }, [currentOpenFile, props.fileTree]);
 
     const handleFileClick = (file) => {
         setCurrentOpenFile(file);
@@ -21,9 +15,17 @@ function ProjectRightPart(props) {
         }
     };
 
+    useEffect(() => {
+        if (currentOpenFile && props.fileTree[currentOpenFile]) {
+            console.log("Setting Editor Content:", props.fileTree[currentOpenFile].contents);
+            setEditorContent(props.fileTree[currentOpenFile].contents || ""); 
+        }
+    }, [currentOpenFile, props.fileTree]);
+    
+
     return (
         <div className="w-full h-full flex flex-row">
-            <div className="w-[55%] bg-gray-900 h-full flex flex-col">
+            <div className="w-[100%] bg-gray-900 h-full flex flex-col">
                 {/* File List */}
                 <div className="w-full bg-gray-800 h-[98%] flex flex-row">
                     <div className="w-40 bg-gray-700 text-white font-bold flex flex-col items-start">
@@ -48,11 +50,10 @@ function ProjectRightPart(props) {
                                 allCurrentFile.map((file) => (
                                     <h1
                                         key={file}
-                                        className={`pt-1 py-1 px-3 cursor-pointer font-medium text-center flex items-center gap-2 ${
-                                            currentOpenFile === file
+                                        className={`pt-1 py-1 px-3 cursor-pointer font-medium text-center flex items-center gap-2 ${currentOpenFile === file
                                                 ? "bg-gray-700 text-white"
                                                 : "bg-gray-900 text-gray-400"
-                                        }`}
+                                            }`}
                                         onClick={() => setCurrentOpenFile(file)}
                                     >
                                         {file}
@@ -62,7 +63,7 @@ function ProjectRightPart(props) {
                                                 e.stopPropagation();
                                                 setAllCurrentFile(allCurrentFile.filter(f => f !== file));
                                                 if (currentOpenFile === file) {
-                                                    setCurrentOpenFile(allCurrentFile[0] || "");
+                                                    setCurrentOpenFile("");
                                                 }
                                             }}
                                         >
@@ -74,36 +75,32 @@ function ProjectRightPart(props) {
 
                         {/* Code Editor */}
                         {currentOpenFile && (
-                            <div className="w-full h-[93.5%] bg-gray-900">
+
+                            <div className="z-2 bg-gray-900">
                                 <CodeMirror
                                     value={editorContent}
                                     className="w-full h-full"
                                     theme="dark"
                                     extensions={[javascript()]}
                                     onChange={(value) => {
-                                        console.log("New Value:", value);
-                                        console.log("Before Update:", props.fileTree);
-                                        
                                         props.setFileTree(prevFileTree => {
                                             console.log("Updating fileTree...");
-                                            return {
+                                            const newFileTree = {
                                                 ...prevFileTree,
-                                                [currentOpenFile]: { content: value },
+                                                [currentOpenFile]: { contents: value },
                                             };
+                                            console.log("Updated File Tree:", newFileTree);
+                                            return newFileTree;
                                         });
-                                    
-                                        console.log("After Update:", props.fileTree);
                                     }}
-                                    
                                 />
+
                             </div>
                         )}
                     </div>
                 </div>
             </div>
 
-            {/* Right Side Panel */}
-            <div className="w-[45%] bg-green-200 h-full border-left-2 border-black"></div>
         </div>
     );
 }
