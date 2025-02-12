@@ -44,6 +44,7 @@ function ProjectLeftPart(props) {
 
     const addUserToProject = async () => {
         try {
+            console.log('get called');
             await axios.put('/project/add-users', {
                 projectId: props?.projectId,
                 users: selectedUser
