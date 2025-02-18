@@ -9,6 +9,7 @@ function Home() {
   const [IsModalOpen, setIsModalOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [project, setProject] = useState([]);
+  const [projectAdded, setProjectAdded] = useState(false);
 
   useEffect(() => {
     console.log("Fetching projects...");
@@ -28,7 +29,8 @@ function Home() {
     };
 
     fetchProjects();
-  }, []);
+    setProjectAdded(false);
+  }, [projectAdded]);
 
   useEffect(() => {
     console.log("Updated State:", project);
@@ -49,6 +51,8 @@ function Home() {
       )
       .then((response) => {
         console.log(response);
+        setIsModalOpen(false);
+        setProjectAdded(true);
         navigate("/");
       })
       .catch((err) => {
