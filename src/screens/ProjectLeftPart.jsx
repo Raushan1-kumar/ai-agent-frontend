@@ -45,6 +45,7 @@ function ProjectLeftPart(props) {
     const addUserToProject = async () => {
         try {
             console.log('get called');
+            console.log(selectedUser);
             await axios.put('/project/add-users', {
                 projectId: props?.projectId,
                 users: selectedUser
@@ -138,7 +139,13 @@ function ProjectLeftPart(props) {
                         </div>
                         <div className="max-h-60 overflow-y-auto">
                             {users.map(user => (
-                                <div key={user.email} onClick={() => setSelectedUser([...selectedUser, user.email])} className="p-2 cursor-pointer flex flex-row gap-3 hover:bg-gray-100 rounded">
+                                <div key={user.email} onClick={() => {
+                                    if (selectedUser.includes(user.email)) {
+                                        setSelectedUser(selectedUser.filter(email => email !== user.email));
+                                    } else {
+                                        setSelectedUser([...selectedUser, user.email]);
+                                    }
+                                }} className={`p-2 cursor-pointer flex flex-row gap-3 rounded ${selectedUser.includes(user.email) ? 'bg-blue-200' : ''}`}>
                                     <div className="w-10 h-10 rounded-full bg-gray-200 flex justify-center items-center">
                                         <i className="ri-user-fill"></i>
                                     </div>
